@@ -1,0 +1,57 @@
+Version:2021.01.28
+
+#
+# File:filename,location,target
+#
+# example
+#
+# File:db-server-checks.pl,<SRC>,<TRGT>
+# File:Common.pm,<COMMON>/PerlModules/Main,<TRGT>/lib/OpsB
+# File:mssql-jdbc_auth-8.2.2.x64.dll,<COMMON>/java/Main,<TRGT>/lib/java
+#
+# <SRC> = "this tool" root directory from Branch
+# <TRGT> = "this tool" root directory for packaging
+# <ROOT> = Root (ie parent of the utility branch)
+# <Common> = Common directory under ROOT
+#
+
+File:connectors.pl,<SRC>,<TRGT>
+File:database-checks.pl,<SRC>,<TRGT>
+File:doc-opr-version-check.pdf,<SRC>,<TRGT>
+File:flashplayer-checks.ps1,<ROOT>/flash-checks/Branches/V1.2/,<TRGT>
+File:OBM_Integration_support_matrix_helper.xlsx,<SRC>,<TRGT>
+File:opr-version-check.pl,<SRC>,<TRGT>
+File:ReadMe.APM.txt,<SRC>,<TRGT>
+File:ReadMe.FlashPlayer-Checks.txt,<ROOT>/flash-checks/Branches/V1.2/,<TRGT>
+File:ReadMe.OBM_Integration_support_matrix_helper.txt,<SRC>,<TRGT>
+File:ReadMe.OBR.txt,<SRC>,<TRGT>
+File:ReadMe.txt,<SRC>,<TRGT>
+File:ReadMe.UpgradeAdvisor.txt,<SRC>,<TRGT>
+File:run-apm-checks.pl,<SRC>,<TRGT>
+File:run-content-manager.pl,<SRC>,<TRGT>
+File:oaperl.bat,<Common>/Utilities/Main,<TRGT>
+File:run-obr-checks.pl,<SRC>,<TRGT>
+File:run-opr-checker.pl,<SRC>,<TRGT>
+File:run-opr-connected-server.pl,<SRC>,<TRGT>
+File:run-opr-user.pl,<SRC>,<TRGT>
+File:tls-check.pl,<SRC>,<TRGT>
+File:UpgradeAdvisor.zip,<SRC>,<TRGT>
+File:Versions.dat,<SRC>,<TRGT>
+File:mssql-jdbc_auth-8.2.2.x64.dll,<Common>/java/Main/,<TRGT>/lib/java
+File:mssql-jdbc_auth-8.2.2.x86.dll,<Common>/java/Main/,<TRGT>/lib/java
+File:mssql-jdbc-8.2.2.jre8.jar,<Common>/java/Main/,<TRGT>/lib/java
+File:ojdbc6.jar,<Common>/java/Main/,<TRGT>/lib/java
+File:opr-tlstest-jar-with-dependencies.jar,<Common>/java/Main/,<TRGT>/lib/java
+File:opsbdb.jar,<ROOT>/opsbdb/Main/,<TRGT>/lib/java
+File:postgresql-42.2.12.jar,<Common>/java/Main/,<TRGT>/lib/java
+File:Checker.pm,<Common>/PerlModules/Main/,<TRGT>/lib/OpsB
+File:Common.pm,<Common>/PerlModules/Branches/V2.6/,<TRGT>/lib/OpsB
+File:Compress.pm,<Common>/PerlModules/Branches/V2.6/,<TRGT>/lib/OpsB
+File:Database.pm,<Common>/PerlModules/Branches/V2.6/,<TRGT>/lib/OpsB
+File:HPBSM.pm,<Common>/PerlModules/Branches/V2.6/,<TRGT>/lib/OpsB
+File:OVDeploy.pm,<Common>/PerlModules/Branches/V2.6/,<TRGT>/lib/OpsB
+File:Web.pm,<Common>/PerlModules/Branches/V2.6/,<TRGT>/lib/OpsB
+File:mf-utils.exe,<Common>Win/Main/,<TRGT>/lib/Win
+File:Oracle.ManagedDataAccess.dll,<Common>Win/Main/,<TRGT>/lib/Win
+
+

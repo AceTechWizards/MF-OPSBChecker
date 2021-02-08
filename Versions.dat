@@ -1,0 +1,205 @@
+/<!--
+++
+File:		Versions.dat
+Created:	15-May-2020, by Andy
+Reason:		Data for perl scripts
+--
+Abstract:	This file uses an Xml format to hold information about product and component versions for the OpsBridge Version Check utility. Each section has a brief description
+--
+Edit History:
+		Who	When		Why
+		=======	=============	===========================================================================================================================================
+		Andy	15-May-2020	Created
+--!>
+
+<--!
+Main section - specify the current version we are using as the "upgrade target" for the server and for the agent. Also now the TLS requirements
+
+Main
+	Version			The exyternal version (ie 2020.05)
+	InternalVersion		The Version number (ie 11.0)
+	FlashFreeInformation	Description of flash free status
+
+CurrentAgent
+	InternalVersion		The Version number (ie 12.11)
+	ExternalVersion		The external version (ie 2020.05)
+
+TLS
+	MinimumVersion		The minimum supported version (ie 1.0)
+	RecommendedVersion	The recommended version (ie 1.2)
+--!>
+
+<Main Version="2020.10" InternalVersion="11.01" FlashFreeInformation="Flash Independant based Operations UI"/>
+<CurrentAgent InternalVersion="12.14" ExternalVersion="2020.10" />
+<TLS MinimumVersion="1.1" RecommendedVersion="1.2" />
+
+<--!
+OBMVersion section. Key is 
+
+OBMVersion	
+	VersionExternal 	External version (ie 2020.05)
+	VersionInternalBase	Internal version (ie 11.0)
+	UpgradeToVersion	The version that this can be upgraded to (ie an interim version such as 10.63)
+	UpgradeToIP		The IP version required with the UpgradeToVersion (ie 6)
+
+OBMDBVersion
+	Product			Database Prioduct (ie MS SQL - can be MS SQl, Oracle or Postgresql)
+	VersionSupported	Product version number - ie 12.0
+	VersionName		"Friendly" name (ie 2014)
+--!>
+
+<OBMVersion VersionExternal="10.00" VersionInternalBase="10.00.172" UpgradeToVersion="10.12" UpgradeToIP="6"/>
+<OBMVersion VersionExternal="10.01" VersionInternalBase="10.01.41" LatestIP="6" UpgradeToVersion="10.12" UpgradeToIP="6"/>
+<OBMVersion VersionExternal="10.10" VersionInternalBase="10.10.028" LatestIP="1" UpgradeToVersion="10.12" UpgradeToIP="6"/>
+<OBMVersion VersionExternal="10.11" VersionInternalBase="10.11.016" LatestIP="1" UpgradeToVersion="10.12" UpgradeToIP="6"/>
+<OBMVersion VersionExternal="10.12" VersionInternalBase="10.12" LatestIP="6" UpgradeToVersion="10.12" UpgradeToIP="6"/>
+<OBMVersion VersionExternal="10.60" VersionInternalBase="10.60" LatestIP="2" UpgradeToVersion="10.63" UpgradeToIP="4"/>
+<OBMVersion VersionExternal="2017.05" VersionInternalBase="10.61" UpgradeToVersion="10.63" UpgradeToIP="4"/>
+<OBMVersion VersionExternal="2017.08" VersionInternalBase="10.62.013"  UpgradeToVersion="10.63" UpgradeToIP="4"/>
+<OBMVersion VersionExternal="2017.11" VersionInternalBase="10.63.011" LatestIP="4" UpgradeToVersion="10.63" UpgradeToIP="4"/>
+<OBMVersion VersionExternal="2018.05" VersionInternalBase="10.70.007"  UpgradeToVersion="10.70"/>
+<OBMVersion VersionExternal="2018.11" VersionInternalBase="10.71.016"  UpgradeToVersion="10.71"/>
+<OBMVersion VersionExternal="2019.05" VersionInternalBase="10.80" LatestIP="1"  UpgradeToVersion="10.80" UpgradeToIP="1"/>
+<OBMVersion VersionExternal="2019.11" VersionInternalBase="10.82"  UpgradeToVersion="10.82"/>
+<OBMVersion VersionExternal="2020.05" VersionInternalBase="11.0"  UpgradeToVersion="11.00"/>
+<OBMVersion VersionExternal="2020.10" VersionInternalBase="11.01"  UpgradeToVersion="11.01"/>
+
+<OBMDBVersion Product="MS SQL" VersionSupported="12" VersionName="2014" />
+<OBMDBVersion Product="Oracle" VersionSupported="12" VersionName="12c" />
+<OBMDBVersion Product="Postgresql" VersionSupported="9.4" VersionName="9.4" />
+
+<--!
+Management Packs. Key is 
+
+ManagementPack
+	Name			Name of MP
+	LowestSupported		Minimum supported version (ie 2018.05)
+	Recommended		Current or recommended version (ie 2020.05)
+--!>
+
+<ManagementPack Name="Apache Kafka" Recommended="1.10" />
+<ManagementPack Name="Apache Web Server" Recommended="1.01" />
+<ManagementPack Name="AWS" Recommended="2019.11" />
+<ManagementPack Name="Azure" Recommended="2020.02" />
+<ManagementPack Name="Business Process Monitor" Recommended="1.01" />
+<ManagementPack Name="Diagnostics Metric Streaming" Recommended="1.00" />
+<ManagementPack Name="Docker" Recommended="2.10" />
+<ManagementPack Name="Docker (AddOn)" Recommended="2.10" />
+<ManagementPack Name="GoogleCloud" Recommended="1.00" />
+<ManagementPack Name="Hadoop" Recommended="1.10" />
+<ManagementPack Name="IBM WebSphere Application Server" Recommended="2018.11" />
+<ManagementPack Name="Informix Database" Recommended="1.00" />
+<ManagementPack Name="Infrastructure" Recommended="2.0" />
+<ManagementPack Name="Infrastructure AddOn" Recommended="2018.11" />
+<ManagementPack Name="JBoss Application Server" Recommended="2019.08" />
+<ManagementPack Name="JBoss AppServer Addon" Recommended="2019.08" />
+<ManagementPack Name="Microsoft ActiveDirectory" Recommended="2020.02" />
+<ManagementPack Name="Microsoft Exchange Server" Recommended="2020.05" />
+<ManagementPack Name="Microsoft IIS" Recommended="2020.05" />
+<ManagementPack Name="Microsoft SharePoint Server" Recommended="1.01" />
+<ManagementPack Name="Microsoft Skype for Business Server" Recommended="1.00" />
+<ManagementPack Name="Microsoft SQL Server" Recommended="2018.11" />
+<ManagementPack Name="Microsoft SQL Server Log Streaming (AddOn)" Recommended="1.00" />
+<ManagementPack Name="Microsoft SQL Server Metric Store (AddOn)" Recommended="1.00" />
+<ManagementPack Name="Oracle Database" Recommended="2020.11" />
+<ManagementPack Name="PostgreSQL" Recommended="1.10" />
+<ManagementPack Name="RUM" Recommended="1.01" />
+<ManagementPack Name="SAP" Recommended="2018.06" />
+<ManagementPack Name="SAP HANA" Recommended="2.00" />
+<ManagementPack Name="SAP Log Streaming" Recommended="2018.06" />
+<ManagementPack Name="SAP Sybase ASE" Recommended="1.00" />
+<ManagementPack Name="TIBCO" Recommended="1.00" />
+<ManagementPack Name="Vertica" Recommended="1.00" />
+<ManagementPack Name="Oracle WebLogic" Recommended="2020.11" />
+<ManagementPack Name="WebSphere Metric Store (AddOn)" Recommended="1.00" />
+<ManagementPack Name="Apache Webserver Addon" Recommended="1.00" />
+<ManagementPack Name="SiteScope Metric Streaming" Recommended="2019.11" />
+<ManagementPack Name="Apache Kafka (AddOn)" Recommended="1.10" />
+<ManagementPack Name="AWS LogStreaming (AddOn)" Recommended="1.30" />
+<ManagementPack Name="Microsoft Azure LogStreaming (AddOn)" Recommended="2.30" />
+<ManagementPack Name="Microsoft Azure Stack" Recommended="2.20" />
+<ManagementPack Name="Microsoft SharePoint Server" Recommended="1.01" />
+<ManagementPack Name="Microsoft IIS AddOn" Recommended="1.00" />
+<ManagementPack Name="Microsoft365" Recommended="2020.11" />
+<!--
+Connector Section Attributes:-
+
+	Name		Connector name (from "rpm -qa" or "wmic product get name, version" [
+	Recommended	The version that should be installed - triggers a "warning" message ... yellow
+-->
+
+<Connector Name="Base" Recommended="10.72" />
+<Connector Name="Generic Integration Framework" Recommended="1.80" />
+<Connector Name="Apache Ambari" Recommended="2018.05" />
+<Connector Name="Ambari" Recommended="2018.05" />
+<Connector Name="Icinga" Recommended="1.0.55" />
+<Connector Name="SLM" Recommended="2019.05" />
+<Connector Name="NetIQAppManager" Recommended="2019.11" />
+<Connector Name="IBM Tivoli" Recommended="3.2.59" />
+<Connector Name="Microsoft SCOM" Recommended="3.13.3" />
+<Connector Name="SCOM" Recommended="3.13.3" />
+<Connector Name="SCOM Metric Store AddOn" Recommended="3.13.3" />
+<Connector Name="Nagios" Recommended="3.2.2" />
+<Connector Name="OneView" Recommended="3.1.1" />
+<Connector Name="SAP Solution Manager" Recommended="2.11.2" />
+<Connector Name="VMware vRealize Operations Manager" Recommended="2.0.2" />
+<Connector Name="Zabbix" Recommended="2.2.1" />
+<Connector Name="Oracle Enterprise Manager" Recommended="3.11.16" />
+<Connector Name="Monasca" Recommended="2020.08" />
+<Connector Name="CA APM" Recommended="1.81.10" />
+<Connector Name="CA Spectrum" Recommended="1.60.105" />
+<Connector Name="Zenoss" Recommended="2.2.11" />
+
+<!--
+Content Pack Section Attributes:-
+
+	Name		CP Name name (from ContentManager output [
+	Recommended	The version that should be installed - triggers a "warning" message ... yellow
+-->
+
+<ContentPack Name="Base" Recommended="10.72" />
+<ContentPack Name="Generic Integration Framework" Recommended="1.81" />
+<ContentPack Name="Apache Ambari" Recommended="2.0" />
+<ContentPack Name="Ambari 2018.05" Recommended="2.0" />
+<ContentPack Name="Icinga" Recommended="2019.05" />
+<ContentPack Name="SLM 2019.05" Recommended="1.01" />
+<ContentPack Name="NetIQAppManager" Recommended="2019.11" />
+<ContentPack Name="Prometheus" Recommended="2019.11" />
+<ContentPack Name="IBM Tivoli" Recommended="2020.05" />
+<ContentPack Name="Microsoft SCOM" Recommended="2020.05" />
+<ContentPack Name="SCOM" Recommended="2020.05" />
+<ContentPack Name="SCOM Metric Store AddOn" Recommended="1.0" />
+<ContentPack Name="Nagios" Recommended="2020.05" />
+<ContentPack Name="OneView" Recommended="2020.05" />
+<ContentPack Name="SAP Solution Manager" Recommended="2020.05" />
+<ContentPack Name="SAP Solman" Recommended="2020.05" />
+<ContentPack Name="Zabbix" Recommended="2020.02" />
+<ContentPack Name="Monasca" Recommended="2020.08" />
+<ContentPack Name="CA APM" Recommended="2020.05" />
+<ContentPack Name="CA Spectrum" Recommended="2020.05" />
+<ContentPack Name="Zenoss" Recommended="2.2.11" />
+
+<!--
+OBR CP Section Attributes:-
+
+	Name		Internal name
+	Recommended	The version that should be installed - triggers a "warning" message ... yellow
+-->
+<OBRCP Name="Core" Recommended="10.01.003" />
+<OBRCP Name="CoreSystemManagement" Recommended="10.21.006" />
+<OBRCP Name="ETL_SystemManagement_PA" Recommended="10.21.003" />
+<OBRCP Name="ETL_SystemManagement_SiS_API" Recommended="10.00.003" />
+<OBRCP Name="SysPerf_Reports" Recommended="10.21.003" />
+<OBRCP Name="OMi" Recommended="10.00.006" />
+<OBRCP Name="ETL_OMi10x" Recommended="10.01.001" />
+<OBRCP Name="EUMCore" Recommended="10.00.000" />
+<OBRCP Name="ETL_BPM_OMi" Recommended="10.00.002" />
+<OBRCP Name="ETL_BPM" Recommended="10.00.002" />
+<OBRCP Name="BPM" Recommended="10.00.002" />
+
+<!--
+Database checks - Hardware configuration information
+-->
+<Configuration Name="Small" SingleCPU="4" GWCPU="4" DPSCPU="4" SingleMemory="14" GWMemory="6" DPSMemory="12" />
+<Configuration Name="Medium" SingleCPU="4" GWCPU="4" DPSCPU="4" SingleMemory="16" GWMemory="8" DPSMemory="14" />
+<Configuration Name="Large" SingleCPU="4" GWCPU="4" DPSCPU="4" SingleMemory="32" GWMemory="10" DPSMemory="30" />
