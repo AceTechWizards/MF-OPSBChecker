@@ -1,0 +1,37 @@
+Version:2.2
+
+#
+# File:filename,location,target
+#
+# example
+#
+# File:db-server-checks.pl,<SRC>,<TRGT>
+# File:Common.pm,<COMMON>/PerlModules/Main,<TRGT>/lib/OpsB
+# File:mssql-jdbc_auth-8.2.2.x64.dll,<COMMON>/java/Main,<TRGT>/lib/java
+#
+# <SRC> = "this tool" root directory from Branch
+# <TRGT> = "this tool" root directory for packaging
+# <ROOT> = Root (ie parent of the utility branch)
+# <Common> = Common directory under ROOT
+#
+
+File:db-server-checks.pl,<SRC>,<TRGT>
+File:dbtools-scripts.pdf,<SRC>,<TRGT>
+File:oaperl.bat,<Common>/Utilities/Main,<TRGT>
+File:obm-server-checks.pl,<SRC>,<TRGT>
+File:ReadMe.txt,<SRC>,<TRGT>
+File:run-checks.pl,<SRC>,<TRGT>
+File:settings.dat,<SRC>,<TRGT>
+File:mssql-jdbc_auth-8.2.2.x64.dll,<Common>/java/Main/,<TRGT>/lib/java
+File:mssql-jdbc_auth-8.2.2.x86.dll,<Common>/java/Main/,<TRGT>/lib/java
+File:mssql-jdbc-8.2.2.jre8.jar,<Common>/java/Main/,<TRGT>/lib/java
+File:ojdbc6.jar,<Common>/java/Main/,<TRGT>/lib/java
+File:opsbdb.jar,<ROOT>/opsbdb/Main/,<TRGT>/lib/java
+File:postgresql-42.2.12.jar,<Common>/java/Main/,<TRGT>/lib/java
+File:Common.pm,<Common>/PerlModules/Main/,<TRGT>/lib/OpsB
+File:Database.pm,<Common>/PerlModules/Main/,<TRGT>/lib/OpsB
+File:HPBSM.pm,<Common>/PerlModules/Main/,<TRGT>/lib/OpsB
+File:mf-utils.exe,<Common>Win/Main/,<TRGT>/lib/Win
+File:Oracle.ManagedDataAccess.dll,<Common>Win/Main/,<TRGT>/lib/Win
+
+

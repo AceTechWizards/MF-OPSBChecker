@@ -1,0 +1,254 @@
+<!--
+
+This file is used by the script check-db-settings.pl. The various queries used by the script are below in their specific sections. It
+also holds the definitions for "small/medium/large" environments for each server type as documented in the OBM documention
+
+Do not modify this file
+
+--!>
+
+<!
+Version Information
+!>
+
+<VersionInfo OBM Version="2020.05" />
+<VersionInfo MS SQL Version="12" VersionName="2014" />
+<VersionInfo Oracle Version = "12" VersionName="12c" />
+<VersionInfo Postgresql Version="9.4" VersionName"9.4" />
+
+<MS SQL Version ID="9.0" Name="2005" />
+<MS SQL Version ID="10.0" Name="2008" />
+<MS SQL Version ID="10.50" Name="2008 R2" />
+<MS SQL Version ID="11.0" Name="2012" />
+<MS SQL Version ID="12.0" Name="2014" />
+<MS SQL Version ID="13.0" Name="2016" />
+<MS SQL Version ID="14.0" Name="2017" />
+<MS SQL Version ID="15.0" Name="2019" />
+
+<Oracle Version ID="10" Name="10g" />
+<Oracle Version ID="11" Name="11g" />
+<Oracle Version ID="12" Name="12c" />
+<Oracle Version ID="18" Name="18c" />
+<Oracle Version ID="19" Name="19c" />
+
+
+<!--
+
+MS SQL Section - each query is referenced:-
+
+Section: 	MS SQL
+Query: 		<Name>
+Name: 		<Friendly Name for UI>
+QueryString: 	Section with the actual query
+
+For MS SQL - the <Name> is directly used in the perl code
+
+--!>
+
+<MS SQL CPUQuery Name="CPU Count" QueryString="MSSQL1" />
+<MS SQL TempDBQuery Name="TempDB Settings" QueryString="MSSQL2" />
+<MS SQL IndexQuery Name="Indexes with more than %s percent fragmentation" QueryString="MSSQL3" />
+<MS SQL DataFilesQuery Name="Data files for fragmentation" QueryString="MSSQL4" />
+
+<MSSQL1>
+SELECT LogicalCpu = cpu_count, PhysicalCpu = (cpu_count / hyperthread_ratio) FROM sys.dm_os_sys_info
+</MSSQL1>
+
+<MSSQL2>
+select 
+	DeviceName = name,	
+	FileSize = convert(nvarchar, convert(decimal, (size*1.0/128))) + N' MB',
+	AutoGrowth = CASE max_size 
+		WHEN 0 THEN 'off' 
+		WHEN -1 THEN 'on'	
+		ELSE 'Unlimited' end,
+	GrowthValue = case growth 
+		when 0 then 'Fixed size' 
+		else case 
+			when is_percent_growth = 0 then convert(nvarchar, convert(decimal, (growth*1.0/128)) ) + N' MB'	
+			else convert(nvarchar, growth) + N' percent' end end,
+	DeviceType = case type 
+		when 0 then 'Data' 
+		else 'Log' end 
+FROM 
+	tempdb.sys.database_files 
+order by 
+	type, 
+	name
+</MSSQL2>
+
+<MSSQL3>
+select 
+	TableName = object_name(P.object_id), 
+	IndexName = I.name, 
+	Fragmentation = round(P.avg_fragmentation_in_percent, 2),
+	Hint = case when P.avg_fragmentation_in_percent > 50
+		then 'Rebuild'
+		else 'ReIndex' end
+from 
+	sys.dm_db_index_physical_stats(DB_ID(N'%s'), null, null, null, null) P 
+	inner join sys.indexes I 
+		on I.object_id = P.object_id 
+		and I.index_id = P.index_id 
+where 
+	P.avg_fragmentation_in_percent > %s 
+	and I.index_id !=0 
+order by 
+	object_name(P.object_id), 
+	IndexName
+</MSSQL3>
+
+<MSSQL4>
+declare @owner sysname
+set @owner = @@SERVERNAME
+if exists(select 1 from sys.dm_os_cluster_nodes)
+begin
+	declare @sqlStatement nvarchar(max)
+	set @sqlStatement = N'
+		if exists(select 1 from sys.dm_os_cluster_nodes where is_current_owner = 1)
+		begin
+			select @owner = NodeName from sys.dm_os_cluster_nodes where is_current_owner = 1
+		end'
+	exec sp_executesql @sqlStatement, N'@owner sysname out', @owner = @owner out
+end
+select  
+	NodeName = case when charindex('\', @owner) > 0
+		then left(@owner, charindex('\', @owner) -1)
+		else @owner end, 
+	physical_name, 
+	FileSize = ((convert(decimal, size)  * 8) * 1024)
+from 
+	[%s].sys.database_files
+</MSSQL4>
+
+<!--
+
+Postgresql Section - each query is referenced:-
+
+Section: 	Postgresql
+Query: 		<Name>
+Name: 		<Friendly Name for UI>
+QueryString: 	Section with the actual query
+
+For Postgresql - the <Name> is directly used in the perl code
+
+--!>
+
+<Postgresql Settings Name="server settings" QueryString="PG1" />
+<Postgresql UpdateSettings Name="update settings" QueryString="PG2" />
+<Postgresql ReloadSettings Name="reolad settings" QueryString="PG3" />
+
+<PG1>
+select name, setting as value, current_setting(name) as display_value, case vartype when 'bool' then 1 when 'string' then 2 when 'integer' then 3 else 6 end as type, pending_restart, short_desc from pg_settings where name in (%s)
+</PG1>
+
+<PG2>
+alter system set %s ='%s'
+</PG2>
+
+<PG3>
+SELECT pg_reload_conf();
+</PG3>
+
+<!--
+
+Settings according to the documentation:
+
+	https://docs.microfocus.com/itom/Operations_Bridge_Manager:2020.05/PsqlParameterSettings
+
+-->
+
+<Postgresql ParamName="autovacuum_analyze_scale_factor" Small="0.1" Medium="0.2" Large="0.2" />
+<Postgresql ParamName="autovacuum_analyze_threshold" Small="5000" Medium="5000" Large="5000" />
+<Postgresql ParamName="autovacuum_vacuum_threshold" Small="5000" Medium="5000" Large="5000" />
+<Postgresql ParamName="checkpoint_timeout" Small="600" Medium="1200" Large="1800" />
+<Postgresql ParamName="checkpoint_completion_target" Small="0.9" Medium="0.9" Large="0.9" />
+<Postgresql ParamName="commit_delay" Small="500" Medium="500" Large="500" />
+<Postgresql ParamName="effective_cache_size" Small="131072" Medium="524288" Large="1048576" />
+<Postgresql ParamName="log_min_duration_statement" Small="3000" Medium="3000" Large="3000" /">
+<Postgresql ParamName="maintenance_work_mem" Small="131072" Medium="262144" Large="348160" />
+<Postgresql ParamName="max_connections" Small="1000" Medium="1000" Large="1000" />
+<Postgresql ParamName="max_locks_per_transaction" Small="512" Medium="512" Large="512" />
+<Postgresql ParamName="max_wal_size" Small="96" Medium="128" Large="192" />
+<Postgresql ParamName="shared_buffers" Small="65536" Medium="131072" Large="524288" />
+<Postgresql ParamName="work_mem" Small="25600" Medium="51200" Large="51200" />
+<-->
+
+<!--
+
+Oracle Section - each query is referenced:-
+
+Section: 	Oracle
+Query: 		<Name>
+Name: 		<Friendly Name for UI>
+QueryString: 	Section with the actual query
+
+For Oracle - the <Name> is directly used in the perl code
+
+--!>
+
+<Oracle Settings Name="server settings" QueryString="Ora1" />
+
+<Ora1>
+SELECT NAME, VALUE, DISPLAY_VALUE, TYPE, ISSYS_MODIFIABLE as PENDING_RESTART, DESCRIPTION FROM v$parameter where NAME in (%s)
+</Ora1>
+
+
+<!--
+
+Settings according to the documentation:
+
+	https://docs.microfocus.com/itom/Operations_Bridge_Manager:2020.05/OraParaSettings
+
+--!>
+
+<Oracle ParamName="db_block_size" Small="8192" Medium="8192" Large="8192" /> 
+<Oracle ParamName="db_cache_advice" Small="ON" Medium="ON" Large="ON" /> 
+<Oracle ParamName="sga_target" Small="4294967296" Medium="4294967296" Large="4294967296" /> 
+<Oracle ParamName="memory_target" Small="5368709120" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="log_buffer" Small="5242880" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="db_file_multiblock_read_count" ShowOnly="1" />
+<Oracle ParamName="processes" Small="1000" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="sessions" Small="1110" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="optimizer_index_cost_adj" Small="100" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="timed_statistics" Small="TRUE" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="log_checkpoint_interval" Small="0" Medium="*Small*" Large="*Small*" /> 
+<Oracle ParamName="log_checkpoint_timeout" Small="1800" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="optimizer_mode" Small="ALL_ROWS" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="cursor_sharing" Small="EXACT" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="open_cursors" Small="2000" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="sql_trace" Small="FALSE" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="undo_management" Small="AUTO" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="undo_retention" ShowOnly="1" />
+<Oracle ParamName="recyclebin" Small="OFF" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="nls_length_semantics" Small="BYTE" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="nls_comp" Small="BINARY" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="nls_sort" Small="BINARY" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="workarea_size_policy" Small="AUTO" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="pga_aggregate_target" Small="1073741824" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="statistics_level" Small="TYPICAL" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="optimizer_capture_sql_plan_baselines" Small="FALSE" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="audit_trail" Small="NONE" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="cursor_space_for_time" Small="FALSE" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="blank_trimming" Small="FALSE" Medium="*Small*" Large="*Small*" />
+<Oracle ParamName="deferred_segment_creation" Small="TRUE" Medium="*Small*" Large="*Small*" />
+
+<!--
+
+General settings in accordance with the docs. Memory requirements +8GB from doc for OS (Todd)
+
+--!>
+<Memory Size="Small" MinimumSingle="22" RecommendedSingle="24" MinimumDPS="20" RecommendedDPS="22" MinimumGW="14" RecommendedGW="16" />
+<Memory Size="Medium" MinimumSingle="24" RecommendedSingle="28" MinimumDPS="22" RecommendedDPS="26" MinimumGW="16" RecommendedGW="18" />
+<Memory Size="Large" MinimumSingle="40" RecommendedSingle="52" MinimumDPS="38" RecommendedDPS="50" MinimumGW="18" RecommendedGW="20" />
+
+<Linux TopazDisk Recommended="50" Minimum="25" />
+<Linux InstallDisk Recommended="2" Minimum="1" />
+<Linux DataDisk Recommended="1" Minimum="1" />
+<Linux TempDisk Recommended="20" Minimum="20" />
+<Windows TopazDisk Recommended="50" Minimum="25" />
+<Windows InstallDisk Recommended="2" Minimum="1" />
+<Windows DataDisk Recommended="1" Minimum="1" />
+<Windows TempDisk Recommended="20" Minimum="20" />
+
+
